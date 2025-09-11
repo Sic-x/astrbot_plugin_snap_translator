@@ -1,6 +1,7 @@
+import asyncio
 import json
-import os
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from astrbot.api import AstrBotConfig, logger
@@ -26,8 +27,6 @@ class SnapTranslator(Star):
         self._initialize_paths()
 
         try:
-            import asyncio
-
             self.scheduler = AsyncIOScheduler(timezone=self.schedule_timezone)
             self.scheduler.add_job(
                 self.run_daily_task,
@@ -138,7 +137,7 @@ class SnapTranslator(Star):
 
         logger.info("每日任务执行完毕。")
 
-    async def fetch_discord_messages(self, bot) -> str | None:
+    async def fetch_discord_messages(self, bot) -> Path | None:
         """
         获取指定 Discord 频道昨天的消息并保存为 JSON.
         成功时返回文件路径，没有新消息或失败时返回 None.
@@ -189,14 +188,14 @@ class SnapTranslator(Star):
             logger.error(f"获取 Discord 消息时发生严重错误: {e}", exc_info=True)
             return None
 
-    async def translate_file(self, json_file_path: str) -> str:
+    async def translate_file(self, json_file_path: Path) -> str:
         """翻译指定的 JSON 文件。"""
         keyword_content = constants.KEYWORD_CONTENT
 
-        if not os.path.exists(json_file_path):
+        if not json_file_path.exists():
             return f"翻译任务失败：找不到指定的 JSON 文件 {json_file_path}。"
 
-        with open(json_file_path, "r", encoding="utf-8") as f:
+        with json_file_path.open("r", encoding="utf-8") as f:
             json_data_content = json.dumps(json.load(f), indent=2, ensure_ascii=False)
 
         final_prompt = constants.PROMPT_TEMPLATE.format(
@@ -236,7 +235,7 @@ class SnapTranslator(Star):
                 logger.error(error_message)
                 return "处理失败，无法解析 API 返回的内容。"
 
-            base_filename = os.path.splitext(os.path.basename(json_file_path))[0]
+            base_filename = json_file_path.stem
             output_filename = self.output_dir / f"summary_{base_filename}.txt"
             with open(output_filename, "w", encoding="utf-8") as f:
                 f.write(llm_result)
@@ -255,8 +254,6 @@ class SnapTranslator(Star):
 
     async def _send_chunked_message(self, channel, text: str, chunk_size: int):
         """将长文本分割成块并异步发送"""
-        import asyncio
-
         chunks = [text[i : i + chunk_size] for i in range(0, len(text), chunk_size)]
         tasks = [channel.send(chunk) for chunk in chunks]
         await asyncio.gather(*tasks)
