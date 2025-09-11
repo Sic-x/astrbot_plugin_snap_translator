@@ -30,17 +30,24 @@ class SnapTranslator(Star):
             minute=self.schedule_minute,
         )
         self.scheduler.start()
-        logger.info(f"SnapTranslator 任务已调度，将于每日 {self.schedule_hour:02d}:{self.schedule_minute:02d} 执行。")
+        logger.info(
+            f"SnapTranslator 任务已调度，将于每日 "
+            f"{self.schedule_hour:02d}:{self.schedule_minute:02d} 执行。"
+        )
 
     def _load_config(self):
         """从插件配置中加载所有设置"""
         try:
             self.fetch_channel_id = int(self.config.get("fetch_channel_id"))
-            self.summary_channel_id = int(self.config.get("summary_channel_id"))
+            self.summary_channel_id = int(
+                self.config.get("summary_channel_id")
+            )
         except (ValueError, TypeError):
             self.fetch_channel_id = None
             self.summary_channel_id = None
-            logger.warning("fetch_channel_id 或 summary_channel_id 配置格式错误或为空。")
+            logger.warning(
+                "fetch_channel_id 或 summary_channel_id 配置格式错误或为空。"
+            )
 
         try:
             self.schedule_hour = int(self.config.get("schedule_hour"))
@@ -48,17 +55,24 @@ class SnapTranslator(Star):
         except (ValueError, TypeError):
             self.schedule_hour = 16
             self.schedule_minute = 0
-            logger.warning("schedule_hour 或 schedule_minute 配置格式错误或为空，已使用默认值 16:00。")
+            logger.warning(
+                "schedule_hour 或 schedule_minute 配置格式错误或为空，"
+                "已使用默认值 16:00。"
+            )
 
         self.schedule_timezone = self.config.get("schedule_timezone")
 
         self.team_answers_bot_name = self.config.get("team_answers_bot_name")
         if not self.team_answers_bot_name:
             self.team_answers_bot_name = "team-answers"
-            logger.warning("team_answers_bot_name 配置为空，已使用默认值 'team-answers'。")
+            logger.warning(
+                "team_answers_bot_name 配置为空，已使用默认值 'team-answers'。"
+            )
 
         try:
-            self.team_answers_bot_id = int(self.config.get("team_answers_bot_id"))
+            self.team_answers_bot_id = int(
+                self.config.get("team_answers_bot_id")
+            )
         except (ValueError, TypeError):
             self.team_answers_bot_id = None
             logger.warning("team_answers_bot_id 配置格式错误或为空。")
@@ -69,7 +83,9 @@ class SnapTranslator(Star):
         os.makedirs(self.base_dir, exist_ok=True)
 
         self.input_dir = os.path.join(self.base_dir, constants.INPUT_DIR_NAME)
-        self.output_dir = os.path.join(self.base_dir, constants.OUTPUT_DIR_NAME)
+        self.output_dir = os.path.join(
+            self.base_dir, constants.OUTPUT_DIR_NAME
+        )
 
         os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.output_dir, exist_ok=True)
@@ -81,7 +97,12 @@ class SnapTranslator(Star):
         logger.info("开始执行每日 Snap 问答获取和翻译任务...")
 
         if not all(
-            [self.fetch_channel_id, self.summary_channel_id, self.team_answers_bot_id, self.team_answers_bot_name]
+            [
+                self.fetch_channel_id,
+                self.summary_channel_id,
+                self.team_answers_bot_id,
+                self.team_answers_bot_name,
+            ]
         ):
             logger.error("插件配置不完整 (缺少 channel_id 或 bot 信息)，任务终止。")
             return
@@ -119,9 +140,13 @@ class SnapTranslator(Star):
             for i in range(0, len(translation_result_message), 1980):
                 chunk = translation_result_message[i : i + 1980]
                 await summary_channel.send(chunk)
-            logger.info(f"报告已发送至频道 #{getattr(summary_channel, 'name', '未知')}")
+            logger.info(
+                f"报告已发送至频道 #{getattr(summary_channel, 'name', '未知')}"
+            )
         else:
-            logger.error(f"错误：找不到用于发送报告的频道 ID: {self.summary_channel_id}")
+            logger.error(
+                f"错误：找不到用于发送报告的频道 ID: {self.summary_channel_id}"
+            )
 
         logger.info("每日任务执行完毕。")
 
@@ -140,12 +165,20 @@ class SnapTranslator(Star):
             logger.info(f"成功连接到频道 #{getattr(channel, 'name', '未知')}")
 
             now_utc = datetime.now(timezone.utc)
-            today_start_utc = now_utc.replace(hour=0, minute=0, second=0, microsecond=0)
+            today_start_utc = now_utc.replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             yesterday_start_utc = today_start_utc - timedelta(days=1)
 
             history_data = []
-            async for msg in channel.history(limit=None, after=yesterday_start_utc, before=today_start_utc):
-                if msg.author.id == self.team_answers_bot_id and self.team_answers_bot_name in msg.author.name and msg.embeds:
+            async for msg in channel.history(
+                limit=None, after=yesterday_start_utc, before=today_start_utc
+            ):
+                if (
+                    msg.author.id == self.team_answers_bot_id
+                    and self.team_answers_bot_name in msg.author.name
+                    and msg.embeds
+                ):
                     message_data = {
                         "message_id": msg.id,
                         "author": {"id": msg.author.id, "name": msg.author.name},
@@ -155,18 +188,25 @@ class SnapTranslator(Star):
                     history_data.append(message_data)
 
             if not history_data:
-                logger.info(f"频道 #{getattr(channel, 'name', '未知')} 昨天没有符合条件的消息。")
+                logger.info(
+                    f"频道 #{getattr(channel, 'name', '未知')} "
+                    "昨天没有符合条件的消息。"
+                )
                 return None
 
             history_data.reverse()
 
             timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S")
-            output_filename = os.path.join(self.input_dir, f"team-answers_{timestamp_str}.json")
+            output_filename = os.path.join(
+                self.input_dir, f"team-answers_{timestamp_str}.json"
+            )
 
             with open(output_filename, "w", encoding="utf-8") as f:
                 json.dump(history_data, f, indent=4, ensure_ascii=False)
 
-            logger.info(f"成功将 {len(history_data)} 条消息保存到 {output_filename}")
+            logger.info(
+                f"成功将 {len(history_data)} 条消息保存到 {output_filename}"
+            )
             return output_filename
 
         except Exception as e:
@@ -181,10 +221,13 @@ class SnapTranslator(Star):
             return f"翻译任务失败：找不到指定的 JSON 文件 {json_file_path}。"
 
         with open(json_file_path, "r", encoding="utf-8") as f:
-            json_data_content = json.dumps(json.load(f), indent=2, ensure_ascii=False)
+            json_data_content = json.dumps(
+                json.load(f), indent=2, ensure_ascii=False
+            )
 
         final_prompt = constants.PROMPT_TEMPLATE.format(
-            keyword_content=keyword_content, json_data_content=json_data_content
+            keyword_content=keyword_content,
+            json_data_content=json_data_content,
         )
 
         # 获取全局 LLM 提供商
@@ -211,12 +254,19 @@ class SnapTranslator(Star):
                 if not llm_result:
                     raise ValueError("JSON 响应中缺少 'translated_text' 键")
             except (json.JSONDecodeError, ValueError) as e:
-                error_message = f"解析 LLM 的 JSON 响应失败: {e}\n原始响应: {llm_result_raw}"
+                error_message = (
+                    f"解析 LLM 的 JSON 响应失败: {e}\n"
+                    f"原始响应: {llm_result_raw}"
+                )
                 logger.error(error_message)
                 return "处理失败，无法解析 API 返回的内容。"
 
-            base_filename = os.path.splitext(os.path.basename(json_file_path))[0]
-            output_filename = os.path.join(self.output_dir, f"summary_{base_filename}.txt")
+            base_filename = os.path.splitext(
+                os.path.basename(json_file_path)
+            )[0]
+            output_filename = os.path.join(
+                self.output_dir, f"summary_{base_filename}.txt"
+            )
             with open(output_filename, "w", encoding="utf-8") as f:
                 f.write(llm_result)
             logger.info(f"翻译结果已保存至 {output_filename}")
