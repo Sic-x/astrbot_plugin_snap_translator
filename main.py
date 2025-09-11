@@ -8,6 +8,8 @@ from astrbot.api.star import Star, StarTools, register
 
 from .config import constants
 
+DISCORD_MESSAGE_CHUNK_SIZE = 1980
+
 
 @register(
     constants.PLUGIN_NAME,
@@ -19,16 +21,25 @@ class SnapTranslator(Star):
     def __init__(self, context, config: AstrBotConfig) -> None:
         super().__init__(context=context)
         self.config = config
+        self.scheduler = None
         self._load_config()
         self._initialize_paths()
 
-        self.scheduler = AsyncIOScheduler(timezone=self.schedule_timezone)
-        self.scheduler.add_job(
-            self.run_daily_task,
-            "cron",
-            hour=self.schedule_hour,
-            minute=self.schedule_minute,
-        )
+        try:
+            import asyncio
+
+            self.scheduler = AsyncIOScheduler(timezone=self.schedule_timezone)
+            self.scheduler.add_job(
+                self.run_daily_task,
+                "cron",
+                hour=self.schedule_hour,
+                minute=self.schedule_minute,
+            )
+            asyncio.create_task(self._start_scheduler())
+        except Exception as e:
+            logger.error(f"SnapTranslator 调度器初始化失败: {e}", exc_info=True)
+
+    async def _start_scheduler(self):
         self.scheduler.start()
         logger.info(
             "SnapTranslator 任务已调度，将于每日 %s:%s 执行。",
@@ -65,13 +76,11 @@ class SnapTranslator(Star):
     def _initialize_paths(self):
         """初始化所有文件和目录路径"""
         self.base_dir = StarTools.get_data_dir(constants.PLUGIN_NAME)
-        os.makedirs(self.base_dir, exist_ok=True)
+        self.input_dir = self.base_dir / constants.INPUT_DIR_NAME
+        self.output_dir = self.base_dir / constants.OUTPUT_DIR_NAME
 
-        self.input_dir = os.path.join(self.base_dir, constants.INPUT_DIR_NAME)
-        self.output_dir = os.path.join(self.base_dir, constants.OUTPUT_DIR_NAME)
-
-        os.makedirs(self.input_dir, exist_ok=True)
-        os.makedirs(self.output_dir, exist_ok=True)
+        self.input_dir.mkdir(parents=True, exist_ok=True)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
 
     async def run_daily_task(self):
         """
@@ -118,10 +127,11 @@ class SnapTranslator(Star):
         logger.info("步骤 3: 发送最终报告...")
         summary_channel = client.get_channel(self.summary_channel_id)
         if summary_channel:
-            # Discord 消息有2000字符限制，需要分割发送
-            for i in range(0, len(translation_result_message), 1980):
-                chunk = translation_result_message[i : i + 1980]
-                await summary_channel.send(chunk)
+            await self._send_chunked_message(
+                summary_channel,
+                translation_result_message,
+                DISCORD_MESSAGE_CHUNK_SIZE,
+            )
             logger.info(f"报告已发送至频道 #{getattr(summary_channel, 'name', '未知')}")
         else:
             logger.error(f"错误：找不到用于发送报告的频道 ID: {self.summary_channel_id}")
@@ -151,7 +161,10 @@ class SnapTranslator(Star):
                 if msg.author.id == self.team_answers_bot_id and msg.embeds:
                     message_data = {
                         "message_id": msg.id,
-                        "author": {"id": msg.author.id, "name": msg.author.name},
+                        "author": {
+                            "id": msg.author.id,
+                            "name": msg.author.name,
+                        },
                         "timestamp": msg.created_at.isoformat(),
                         "embeds": [embed.to_dict() for embed in msg.embeds],
                     }
@@ -164,7 +177,7 @@ class SnapTranslator(Star):
             history_data.reverse()
 
             timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S")
-            output_filename = os.path.join(self.input_dir, f"team-answers_{timestamp_str}.json")
+            output_filename = self.input_dir / f"team-answers_{timestamp_str}.json"
 
             with open(output_filename, "w", encoding="utf-8") as f:
                 json.dump(history_data, f, indent=4, ensure_ascii=False)
@@ -210,6 +223,10 @@ class SnapTranslator(Star):
 
             try:
                 # LLM 被要求返回 JSON，因此需要解析
+                # 清理可能的 Markdown 代码块标记
+                if llm_result_raw.startswith("```json"):
+                    llm_result_raw = llm_result_raw[7:-4]
+
                 llm_result_json = json.loads(llm_result_raw)
                 llm_result = llm_result_json.get("translated_text")
                 if not llm_result:
@@ -220,7 +237,7 @@ class SnapTranslator(Star):
                 return "处理失败，无法解析 API 返回的内容。"
 
             base_filename = os.path.splitext(os.path.basename(json_file_path))[0]
-            output_filename = os.path.join(self.output_dir, f"summary_{base_filename}.txt")
+            output_filename = self.output_dir / f"summary_{base_filename}.txt"
             with open(output_filename, "w", encoding="utf-8") as f:
                 f.write(llm_result)
             logger.info(f"翻译结果已保存至 {output_filename}")
@@ -236,8 +253,23 @@ class SnapTranslator(Star):
             logger.error(error_message, exc_info=True)
             return f"错误：{error_message}"
 
+    async def _send_chunked_message(self, channel, text: str, chunk_size: int):
+        """将长文本分割成块并异步发送"""
+        import asyncio
+
+        chunks = [text[i : i + chunk_size] for i in range(0, len(text), chunk_size)]
+        tasks = [channel.send(chunk) for chunk in chunks]
+        await asyncio.gather(*tasks)
+
     async def terminate(self):
         """在插件终止时停止调度器"""
-        if self.scheduler and self.scheduler.running:
-            await self.scheduler.shutdown()
-            logger.info("SnapTranslator 的调度器已关闭。")
+        if getattr(self, "scheduler", None) and self.scheduler.running:
+            logger.info("正在关闭 SnapTranslator 的调度器...")
+            try:
+                # shutdown() 是一个同步方法，不能使用 await
+                self.scheduler.shutdown()
+                logger.info("SnapTranslator 的调度器已成功关闭。")
+            except Exception as e:
+                logger.error(f"关闭 SnapTranslator 调度器时发生错误: {e}", exc_info=True)
+        else:
+            logger.info("SnapTranslator 的调度器未运行或未初始化，无需关闭。")
