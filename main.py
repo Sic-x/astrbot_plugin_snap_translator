@@ -129,7 +129,7 @@ class SnapTranslator(Star):
         if summary_channel:
             # Discord 消息有2000字符限制，需要分割发送
             for i in range(0, len(translation_result_message), 1980):
-                chunk = translation_result_message[i : i + 1980]
+                chunk = translation_result_message[i:i + 1980]
                 await summary_channel.send(chunk)
             logger.info(f"报告已发送至频道 #{getattr(summary_channel, 'name', '未知')}")
         else:
