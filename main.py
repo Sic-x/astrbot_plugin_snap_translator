@@ -148,9 +148,7 @@ class SnapTranslator(Star):
 
             history_data = []
             async for msg in channel.history(limit=None, after=yesterday_start_utc, before=today_start_utc):
-                if (
-                    msg.author.id == self.team_answers_bot_id and msg.embeds
-                ):
+                if msg.author.id == self.team_answers_bot_id and msg.embeds:
                     message_data = {
                         "message_id": msg.id,
                         "author": {"id": msg.author.id, "name": msg.author.name},
