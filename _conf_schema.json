@@ -12,7 +12,7 @@
     "schedule_hour": {
         "description": "每日任务执行的小时 (24小时制)",
         "type": "int",
-        "default": 16
+        "default": 9
     },
     "schedule_minute": {
         "description": "每日任务执行的分钟",
