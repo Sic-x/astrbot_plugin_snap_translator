@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "0.5.0"
+PLUGIN_VERSION = "1.0.1"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -12,8 +12,7 @@ INPUT_DIR_NAME = "data"
 OUTPUT_DIR_NAME = "translated_data"
 
 # 提示模板
-PROMPT_TEMPLATE = (
-    """# 角色
+PROMPT_TEMPLATE = """# 角色
 你是一名专业的游戏本地化翻译和内容编辑。
 你的任务是为游戏《Marvel Snap》的开发者答疑（Q&A）内容进行翻译和格式化。
 
@@ -63,11 +62,9 @@ PROMPT_TEMPLATE = (
 
 不要在 JSON 对象之外添加任何额外的解释、标题或 Markdown 标记。
 """
-)
 
 # 关键字内容
-KEYWORD_CONTENT = (
-    """Archetype: 卡组原型
+KEYWORD_CONTENT = """Archetype: 卡组原型
 Discard: 弃牌
 EoT (End of Turn): 回合结束
 Hand buff: 手牌增益
@@ -114,4 +111,3 @@ Game Start: 对局开始时
 End of Turn: 回合结束时
 Spider-Ham: 蜘猪侠
 MARVEL SNAP: 《Marvel Snap》"""
-)
