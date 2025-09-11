@@ -1,4 +1,5 @@
 name: astrbot_plugin_snap_translator
 author: sic
-description: A plugin to fetch and translate Marvel Snap developer Q&A from Discord.
+description: 自动获取并翻译 Marvel Snap 开发者问答
 version: 1.0.1
+repo: https://github.com/Sic-x/astrbot_plugin_snap_translator
