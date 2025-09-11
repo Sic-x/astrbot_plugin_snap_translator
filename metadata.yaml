@@ -1,4 +1,4 @@
-name: Snap Translator
+name: astrbot_plugin_snap_translator
 author: sic
 description: A plugin to fetch and translate Marvel Snap developer Q&A from Discord.
-version: 1.0.0
+version: 1.0.1
