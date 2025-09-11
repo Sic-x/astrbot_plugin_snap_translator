@@ -24,11 +24,6 @@
         "type": "string",
         "default": "Asia/Hong_Kong"
     },
-    "team_answers_bot_name": {
-        "description": "用于识别的频道名称",
-        "type": "string",
-        "default": "team-answers"
-    },
     "team_answers_bot_id": {
         "description": "需要拉取的Discord用户ID",
         "type": "int",

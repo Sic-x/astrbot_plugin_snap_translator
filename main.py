@@ -56,11 +56,6 @@ class SnapTranslator(Star):
 
         self.schedule_timezone = self.config.get("schedule_timezone")
 
-        self.team_answers_bot_name = self.config.get("team_answers_bot_name")
-        if not self.team_answers_bot_name:
-            self.team_answers_bot_name = "team-answers"
-            logger.warning("team_answers_bot_name 配置为空，已使用默认值 'team-answers'。")
-
         try:
             self.team_answers_bot_id = int(self.config.get("team_answers_bot_id"))
         except (ValueError, TypeError):
@@ -89,7 +84,6 @@ class SnapTranslator(Star):
                 self.fetch_channel_id,
                 self.summary_channel_id,
                 self.team_answers_bot_id,
-                self.team_answers_bot_name,
             ]
         ):
             logger.error("插件配置不完整 (缺少 channel_id 或 bot 信息)，任务终止。")
@@ -155,9 +149,7 @@ class SnapTranslator(Star):
             history_data = []
             async for msg in channel.history(limit=None, after=yesterday_start_utc, before=today_start_utc):
                 if (
-                    msg.author.id == self.team_answers_bot_id
-                    and self.team_answers_bot_name in msg.author.name
-                    and msg.embeds
+                    msg.author.id == self.team_answers_bot_id and msg.embeds
                 ):
                     message_data = {
                         "message_id": msg.id,
@@ -249,5 +241,5 @@ class SnapTranslator(Star):
     async def terminate(self):
         """在插件终止时停止调度器"""
         if self.scheduler and self.scheduler.running:
-            self.scheduler.shutdown()
+            await self.scheduler.shutdown()
             logger.info("SnapTranslator 的调度器已关闭。")
