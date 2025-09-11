@@ -12,43 +12,31 @@ on:
 
 jobs:
   lint-and-format:
-    # 任务名称
     name: Lint and Format Check
-    # 运行环境，使用最新的 Ubuntu
     runs-on: ubuntu-latest
 
     steps:
-      # 步骤 1: 检出代码
-      # 这个操作会下载你的仓库代码到运行器中，以便工作流可以访问它。
       - name: Check out code
         uses: actions/checkout@v3
 
-      # 步骤 2: 设置 Python 环境
-      # 使用指定的 Python 版本。你可以根据你的项目需求更改 '3.10'。
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      # 步骤 3: 安装依赖
-      # 首先升级 pip，然后安装在 pyproject.toml 中配置的工具。
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8 black
 
-      # 步骤 4: 使用 Flake8 进行代码风格和逻辑检查
-      # --count: 显示错误总数
-      # --select: 指定要报告的错误类型 (C,E,F,W,B,B950)
-      # --show-source: 显示有问题的代码行
-      # --statistics: 显示每个错误的发生次数
       - name: Lint with flake8
+        # 通过指定 working-directory，确保 flake8 能找到 pyproject.toml 配置
+        working-directory: ./plugins/astrbot_plugin_snap_translator
         run: |
-          flake8 . --count --select=C,E,F,W,B,B950 --show-source --statistics
+          flake8 . --count --show-source --statistics
 
-      # 步骤 5: 使用 Black 检查代码格式
-      # --check: 不会修改文件，而是检查文件是否已经按照 Black 的风格格式化。
-      # 如果有文件需要格式化，这个步骤会失败。
       - name: Check formatting with black
+        # 同样指定工作目录
+        working-directory: ./plugins/astrbot_plugin_snap_translator
         run: |
           black . --check
