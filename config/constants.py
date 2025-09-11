@@ -12,7 +12,8 @@ INPUT_DIR_NAME = "data"
 OUTPUT_DIR_NAME = "translated_data"
 
 # 提示模板
-PROMPT_TEMPLATE = """# 角色
+PROMPT_TEMPLATE = (
+    """# 角色
 你是一名专业的游戏本地化翻译和内容编辑。你的任务是为游戏《Marvel Snap》的开发者答疑（Q&A）内容进行翻译和格式化。
 
 # 核心任务
@@ -47,16 +48,17 @@ PROMPT_TEMPLATE = """# 角色
 例如:
 ```json
 {{
-  "translated_text": "标题：[此处是翻译后的标题]\\n问：[此处是翻译后的问题]\\n\\n答：[此处是翻译后的答案]\\n————————————————————————————————————————————\\n标题：[此处是翻译后的标题]\\n问：[此处是翻译后的问题]\\n\\n答：[此处是翻译后的答案]"
+  "translated_text": "标题：[此处是翻译后的标题]\n问：[此处是翻译后的问题]\n\n答：[此处是翻译后的答案]\n————————————————————————————————————————————\n标题：[此处是翻译后的标题]\n问：[此处是翻译后的问题]\n\n答：[此处是翻译后的答案]"
 }}
 ```
 
 不要在 JSON 对象之外添加任何额外的解释、标题或 Markdown 标记。
 """
+)
 
 # 关键字内容
-KEYWORD_CONTENT = """
-Archetype: 卡组原型
+KEYWORD_CONTENT = (
+    """Archetype: 卡组原型
 Discard: 弃牌
 EoT (End of Turn): 回合结束
 Hand buff: 手牌增益
@@ -102,5 +104,5 @@ Discounts: 减费
 Game Start: 对局开始时
 End of Turn: 回合结束时
 Spider-Ham: 蜘猪侠
-MARVEL SNAP: 《Marvel Snap》
-"""
+MARVEL SNAP: 《Marvel Snap》"""
+)
