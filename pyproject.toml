@@ -10,7 +10,7 @@ line-length = 120
 # Flake8: 代码风格和逻辑检查工具
 # max-line-length: 与 black 保持一致，确保格式化和检查规则不冲突。
 max-line-length = 120
-# exclude: 指定要忽略检查的目录。这些通常是自动生成或与环境相关的文件夹。
+# exclude: 指定要忽略检查的目录。
 exclude = [
     ".git",
     "__pycache__",
@@ -20,3 +20,7 @@ exclude = [
     "venv",
     "env"
 ]
+# ignore: 忽略与 black 冲突的规则。
+# E203: whitespace before ':' (切片中冒号前的空格)
+# W503: line break before binary operator (在二元运算符之前换行)
+ignore = ["E203", "W503"]

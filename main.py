@@ -53,11 +53,11 @@ class SnapTranslator(Star):
             self.schedule_hour = int(self.config.get("schedule_hour"))
             self.schedule_minute = int(self.config.get("schedule_minute"))
         except (ValueError, TypeError):
-            self.schedule_hour = 16
+            self.schedule_hour = 9
             self.schedule_minute = 0
             logger.warning(
                 "schedule_hour 或 schedule_minute 配置格式错误或为空，"
-                "已使用默认值 16:00。"
+                "已使用默认值 9:00。"
             )
 
         self.schedule_timezone = self.config.get("schedule_timezone")
@@ -181,7 +181,10 @@ class SnapTranslator(Star):
                 ):
                     message_data = {
                         "message_id": msg.id,
-                        "author": {"id": msg.author.id, "name": msg.author.name},
+                        "author": {
+                            "id": msg.author.id,
+                            "name": msg.author.name,
+                        },
                         "timestamp": msg.created_at.isoformat(),
                         "embeds": [embed.to_dict() for embed in msg.embeds],
                     }
