@@ -2,11 +2,12 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 
-from astrbot.api import logger, AstrBotConfig
-from astrbot.api.star import Star, register, StarTools
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from astrbot.api import AstrBotConfig, logger
+from astrbot.api.star import Star, StarTools, register
 
 from .config import constants
+
 
 @register(
     constants.PLUGIN_NAME,
@@ -24,7 +25,7 @@ class SnapTranslator(Star):
         self.scheduler = AsyncIOScheduler(timezone=self.schedule_timezone)
         self.scheduler.add_job(
             self.run_daily_task,
-            'cron',
+            "cron",
             hour=self.schedule_hour,
             minute=self.schedule_minute,
         )
@@ -40,7 +41,7 @@ class SnapTranslator(Star):
             self.fetch_channel_id = None
             self.summary_channel_id = None
             logger.warning("fetch_channel_id 或 summary_channel_id 配置格式错误或为空。")
-        
+
         try:
             self.schedule_hour = int(self.config.get("schedule_hour"))
             self.schedule_minute = int(self.config.get("schedule_minute"))
@@ -50,7 +51,7 @@ class SnapTranslator(Star):
             logger.warning("schedule_hour 或 schedule_minute 配置格式错误或为空，已使用默认值 16:00。")
 
         self.schedule_timezone = self.config.get("schedule_timezone")
-        
+
         self.team_answers_bot_name = self.config.get("team_answers_bot_name")
         if not self.team_answers_bot_name:
             self.team_answers_bot_name = "team-answers"
@@ -66,10 +67,10 @@ class SnapTranslator(Star):
         """初始化所有文件和目录路径"""
         self.base_dir = StarTools.get_data_dir(constants.PLUGIN_NAME)
         os.makedirs(self.base_dir, exist_ok=True)
-        
+
         self.input_dir = os.path.join(self.base_dir, constants.INPUT_DIR_NAME)
         self.output_dir = os.path.join(self.base_dir, constants.OUTPUT_DIR_NAME)
-        
+
         os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -77,9 +78,11 @@ class SnapTranslator(Star):
         """
         执行每日任务：获取、翻译并发送报告。
         """
-        logger.info(f"开始执行每日 Snap 问答获取和翻译任务...")
+        logger.info("开始执行每日 Snap 问答获取和翻译任务...")
 
-        if not all([self.fetch_channel_id, self.summary_channel_id, self.team_answers_bot_id, self.team_answers_bot_name]):
+        if not all(
+            [self.fetch_channel_id, self.summary_channel_id, self.team_answers_bot_id, self.team_answers_bot_name]
+        ):
             logger.error("插件配置不完整 (缺少 channel_id 或 bot 信息)，任务终止。")
             return
 
@@ -88,7 +91,7 @@ class SnapTranslator(Star):
         if not discord_platform:
             logger.error("错误：无法获取到全局 Discord 平台实例。")
             return
-            
+
         client = discord_platform.client
         if not client or not client.is_ready():
             logger.error("错误：全局 Discord 客户端未准备就绪。")
@@ -99,7 +102,7 @@ class SnapTranslator(Star):
         # 步骤 1: 获取 Discord 消息
         logger.info("步骤 1: 获取 Discord 消息...")
         new_file_path = await self.fetch_discord_messages(client)
-        
+
         if not new_file_path:
             logger.info("获取消息失败或没有新消息，任务结束。")
             return
@@ -107,24 +110,24 @@ class SnapTranslator(Star):
         # 步骤 2: 翻译
         logger.info(f"步骤 2: 开始翻译文件 {new_file_path}...")
         translation_result_message = await self.translate_file(new_file_path)
-        
+
         # 步骤 3: 推送结果
         logger.info("步骤 3: 发送最终报告...")
         summary_channel = client.get_channel(self.summary_channel_id)
         if summary_channel:
             # Discord 消息有2000字符限制，需要分割发送
             for i in range(0, len(translation_result_message), 1980):
-                chunk = translation_result_message[i:i+1980]
+                chunk = translation_result_message[i : i + 1980]
                 await summary_channel.send(chunk)
             logger.info(f"报告已发送至频道 #{getattr(summary_channel, 'name', '未知')}")
         else:
             logger.error(f"错误：找不到用于发送报告的频道 ID: {self.summary_channel_id}")
 
-        logger.info(f"每日任务执行完毕。")
+        logger.info("每日任务执行完毕。")
 
     async def fetch_discord_messages(self, bot) -> str | None:
         """
-        获取指定 Discord 频道昨天的消息并保存为 JSON. 
+        获取指定 Discord 频道昨天的消息并保存为 JSON.
         成功时返回文件路径，没有新消息或失败时返回 None.
         """
         logger.debug("开始在 Discord 中获取消息...")
@@ -142,17 +145,12 @@ class SnapTranslator(Star):
 
             history_data = []
             async for msg in channel.history(limit=None, after=yesterday_start_utc, before=today_start_utc):
-                if (
-                    msg.author.id == self.team_answers_bot_id and
-                    self.team_answers_bot_name in msg.author.name and
-                    msg.embeds
-                ):
-                    
+                if msg.author.id == self.team_answers_bot_id and self.team_answers_bot_name in msg.author.name and msg.embeds:
                     message_data = {
                         "message_id": msg.id,
-                        "author": { "id": msg.author.id, "name": msg.author.name },
+                        "author": {"id": msg.author.id, "name": msg.author.name},
                         "timestamp": msg.created_at.isoformat(),
-                        "embeds": [embed.to_dict() for embed in msg.embeds]
+                        "embeds": [embed.to_dict() for embed in msg.embeds],
                     }
                     history_data.append(message_data)
 
@@ -162,10 +160,10 @@ class SnapTranslator(Star):
 
             history_data.reverse()
 
-            timestamp_str = datetime.now().strftime('%Y%m%d%H%M%S')
+            timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S")
             output_filename = os.path.join(self.input_dir, f"team-answers_{timestamp_str}.json")
 
-            with open(output_filename, 'w', encoding='utf-8') as f:
+            with open(output_filename, "w", encoding="utf-8") as f:
                 json.dump(history_data, f, indent=4, ensure_ascii=False)
 
             logger.info(f"成功将 {len(history_data)} 条消息保存到 {output_filename}")
@@ -182,12 +180,11 @@ class SnapTranslator(Star):
         if not os.path.exists(json_file_path):
             return f"翻译任务失败：找不到指定的 JSON 文件 {json_file_path}。"
 
-        with open(json_file_path, 'r', encoding='utf-8') as f:
+        with open(json_file_path, "r", encoding="utf-8") as f:
             json_data_content = json.dumps(json.load(f), indent=2, ensure_ascii=False)
 
         final_prompt = constants.PROMPT_TEMPLATE.format(
-            keyword_content=keyword_content,
-            json_data_content=json_data_content
+            keyword_content=keyword_content, json_data_content=json_data_content
         )
 
         # 获取全局 LLM 提供商
@@ -216,14 +213,14 @@ class SnapTranslator(Star):
             except (json.JSONDecodeError, ValueError) as e:
                 error_message = f"解析 LLM 的 JSON 响应失败: {e}\n原始响应: {llm_result_raw}"
                 logger.error(error_message)
-                return f"处理失败，无法解析 API 返回的内容。"
+                return "处理失败，无法解析 API 返回的内容。"
 
             base_filename = os.path.splitext(os.path.basename(json_file_path))[0]
             output_filename = os.path.join(self.output_dir, f"summary_{base_filename}.txt")
-            with open(output_filename, 'w', encoding='utf-8') as f:
+            with open(output_filename, "w", encoding="utf-8") as f:
                 f.write(llm_result)
             logger.info(f"翻译结果已保存至 {output_filename}")
-            
+
             return f"""**Marvel Snap 每日开发者问答翻译**
 `{datetime.now().strftime('%Y-%m-%d')}`
 
