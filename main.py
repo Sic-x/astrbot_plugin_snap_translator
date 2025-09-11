@@ -50,9 +50,9 @@ class SnapTranslator(Star):
             self.schedule_hour = int(self.config.get("schedule_hour"))
             self.schedule_minute = int(self.config.get("schedule_minute"))
         except (ValueError, TypeError):
-            self.schedule_hour = 0
+            self.schedule_hour = 9
             self.schedule_minute = 0
-            logger.warning("schedule_hour 或 schedule_minute 配置格式错误或为空，" "已使用默认值 00:00。")
+            logger.warning("schedule_hour 或 schedule_minute 配置格式错误或为空，" "已使用默认值 09:00。")
 
         self.schedule_timezone = self.config.get("schedule_timezone")
 
