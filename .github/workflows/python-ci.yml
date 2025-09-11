@@ -1,3 +1,4 @@
+
 # .github/workflows/python-ci.yml
 # 最终修正版：从项目根目录运行，以确保能找到根目录下的 pyproject.toml
 
@@ -30,7 +31,6 @@ jobs:
           pip install flake8 black
 
       - name: Lint with flake8
-        # 从根目录运行，flake8 会自动找到根目录的 pyproject.toml
         run: |
           flake8 . --count --show-source --statistics
 
