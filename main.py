@@ -40,7 +40,9 @@ class SnapTranslator(Star):
         """从插件配置中加载所有设置"""
         try:
             self.fetch_channel_id = int(self.config.get("fetch_channel_id"))
-            self.summary_channel_id = int(self.config.get("summary_channel_id"))
+            self.summary_channel_id = int(
+                self.config.get("summary_channel_id")
+            )
         except (ValueError, TypeError):
             self.fetch_channel_id = None
             self.summary_channel_id = None
@@ -65,7 +67,9 @@ class SnapTranslator(Star):
             logger.warning("team_answers_bot_name 配置为空，已使用默认值 'team-answers'。")
 
         try:
-            self.team_answers_bot_id = int(self.config.get("team_answers_bot_id"))
+            self.team_answers_bot_id = int(
+                self.config.get("team_answers_bot_id")
+            )
         except (ValueError, TypeError):
             self.team_answers_bot_id = None
             logger.warning("team_answers_bot_id 配置格式错误或为空。")
@@ -76,7 +80,9 @@ class SnapTranslator(Star):
         os.makedirs(self.base_dir, exist_ok=True)
 
         self.input_dir = os.path.join(self.base_dir, constants.INPUT_DIR_NAME)
-        self.output_dir = os.path.join(self.base_dir, constants.OUTPUT_DIR_NAME)
+        self.output_dir = os.path.join(
+            self.base_dir, constants.OUTPUT_DIR_NAME
+        )
 
         os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.output_dir, exist_ok=True)
@@ -152,7 +158,9 @@ class SnapTranslator(Star):
             logger.info(f"成功连接到频道 #{getattr(channel, 'name', '未知')}")
 
             now_utc = datetime.now(timezone.utc)
-            today_start_utc = now_utc.replace(hour=0, minute=0, second=0, microsecond=0)
+            today_start_utc = now_utc.replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             yesterday_start_utc = today_start_utc - timedelta(days=1)
 
             history_data = []
@@ -166,14 +174,20 @@ class SnapTranslator(Star):
                 ):
                     message_data = {
                         "message_id": msg.id,
-                        "author": {"id": msg.author.id, "name": msg.author.name},
+                        "author": {
+                            "id": msg.author.id,
+                            "name": msg.author.name
+                        },
                         "timestamp": msg.created_at.isoformat(),
                         "embeds": [embed.to_dict() for embed in msg.embeds],
                     }
                     history_data.append(message_data)
 
             if not history_data:
-                logger.info(f"频道 #{getattr(channel, 'name', '未知')} 昨天没有符合条件的消息。")
+                logger.info(
+                    f"频道 #{getattr(channel, 'name', '未知')} "
+                    "昨天没有符合条件的消息。"
+                )
                 return None
 
             history_data.reverse()
@@ -201,10 +215,13 @@ class SnapTranslator(Star):
             return f"翻译任务失败：找不到指定的 JSON 文件 {json_file_path}。"
 
         with open(json_file_path, "r", encoding="utf-8") as f:
-            json_data_content = json.dumps(json.load(f), indent=2, ensure_ascii=False)
+            json_data_content = json.dumps(
+                json.load(f), indent=2, ensure_ascii=False
+            )
 
         final_prompt = constants.PROMPT_TEMPLATE.format(
-            keyword_content=keyword_content, json_data_content=json_data_content
+            keyword_content=keyword_content,
+            json_data_content=json_data_content,
         )
 
         # 获取全局 LLM 提供商
@@ -237,7 +254,9 @@ class SnapTranslator(Star):
                 logger.error(error_message)
                 return "处理失败，无法解析 API 返回的内容。"
 
-            base_filename = os.path.splitext(os.path.basename(json_file_path))[0]
+            base_filename = os.path.splitext(
+                os.path.basename(json_file_path)
+            )[0]
             output_filename = os.path.join(
                 self.output_dir, f"summary_{base_filename}.txt"
             )
