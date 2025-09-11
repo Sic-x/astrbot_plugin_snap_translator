@@ -40,7 +40,9 @@ class SnapTranslator(Star):
         """从插件配置中加载所有设置"""
         try:
             self.fetch_channel_id = int(self.config.get("fetch_channel_id"))
-            self.summary_channel_id = int(self.config.get("summary_channel_id"))
+            self.summary_channel_id = int(
+                self.config.get("summary_channel_id")
+            )
         except (ValueError, TypeError):
             self.fetch_channel_id = None
             self.summary_channel_id = None
@@ -69,7 +71,9 @@ class SnapTranslator(Star):
             )
 
         try:
-            self.team_answers_bot_id = int(self.config.get("team_answers_bot_id"))
+            self.team_answers_bot_id = int(
+                self.config.get("team_answers_bot_id")
+            )
         except (ValueError, TypeError):
             self.team_answers_bot_id = None
             logger.warning("team_answers_bot_id 配置格式错误或为空。")
@@ -80,7 +84,9 @@ class SnapTranslator(Star):
         os.makedirs(self.base_dir, exist_ok=True)
 
         self.input_dir = os.path.join(self.base_dir, constants.INPUT_DIR_NAME)
-        self.output_dir = os.path.join(self.base_dir, constants.OUTPUT_DIR_NAME)
+        self.output_dir = os.path.join(
+            self.base_dir, constants.OUTPUT_DIR_NAME
+        )
 
         os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.output_dir, exist_ok=True)
@@ -133,7 +139,7 @@ class SnapTranslator(Star):
         if summary_channel:
             # Discord 消息有2000字符限制，需要分割发送
             for i in range(0, len(translation_result_message), 1980):
-                chunk = translation_result_message[i : i + 1980]
+                chunk = translation_result_message[i: i + 1980]
                 await summary_channel.send(chunk)
             logger.info(f"报告已发送至频道 #{getattr(summary_channel, 'name', '未知')}")
         else:
@@ -158,7 +164,9 @@ class SnapTranslator(Star):
             logger.info(f"成功连接到频道 #{getattr(channel, 'name', '未知')}")
 
             now_utc = datetime.now(timezone.utc)
-            today_start_utc = now_utc.replace(hour=0, minute=0, second=0, microsecond=0)
+            today_start_utc = now_utc.replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             yesterday_start_utc = today_start_utc - timedelta(days=1)
 
             history_data = []
@@ -172,7 +180,10 @@ class SnapTranslator(Star):
                 ):
                     message_data = {
                         "message_id": msg.id,
-                        "author": {"id": msg.author.id, "name": msg.author.name},
+                        "author": {
+                            "id": msg.author.id,
+                            "name": msg.author.name
+                        },
                         "timestamp": msg.created_at.isoformat(),
                         "embeds": [embed.to_dict() for embed in msg.embeds],
                     }
@@ -209,7 +220,9 @@ class SnapTranslator(Star):
             return f"翻译任务失败：找不到指定的 JSON 文件 {json_file_path}。"
 
         with open(json_file_path, "r", encoding="utf-8") as f:
-            json_data_content = json.dumps(json.load(f), indent=2, ensure_ascii=False)
+            json_data_content = json.dumps(
+                json.load(f), indent=2, ensure_ascii=False
+            )
 
         final_prompt = constants.PROMPT_TEMPLATE.format(
             keyword_content=keyword_content,
@@ -246,7 +259,9 @@ class SnapTranslator(Star):
                 logger.error(error_message)
                 return "处理失败，无法解析 API 返回的内容。"
 
-            base_filename = os.path.splitext(os.path.basename(json_file_path))[0]
+            base_filename = os.path.splitext(
+                os.path.basename(json_file_path)
+            )[0]
             output_filename = os.path.join(
                 self.output_dir, f"summary_{base_filename}.txt"
             )
