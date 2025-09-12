@@ -37,13 +37,12 @@
 
 要使此插件正常工作，您需要在 AstrBot 的插件配置中填入以下关键信息：
 
-1.  **`fetch_channel_id`**: （必填）需要抓取 `team-answers` 机器人消息的源频道的 ID。
-2.  **`summary_channel_id`**: （必填）用于接收每日翻译报告的目标频道的 ID。
-3.  **`team_answers_bot_id`**: （必填）`team-answers` 机器人的用户 ID。
-4.  **`team_answers_bot_name`**: （可选）`team-answers` 机器人的名称，默认为 "team-answers"。
-5.  **`schedule_hour`**: （可选）每日任务执行的小时（24小时制），默认为 16。
-6.  **`schedule_minute`**: （可选）每日任务执行的分钟，默认为 0。
-7.  **`schedule_timezone`**: （可选）任务执行时区，默认为空（使用系统默认时区）。
+1.  **`fetch_channel_id`**: （必填）需要抓取机器人消息的源频道的 ID。
+2.  **`summary_channel_id`**: （必填）用于接收报告的目标频道的 ID。
+3.  **`team_answers_bot_id`**: （必填）机器人的用户 ID。
+4.  **`schedule_hour`**: （可选）每日任务执行的小时（24小时制），默认为 9。
+5.  **`schedule_minute`**: （可选）每日任务执行的分钟，默认为 0。
+6.  **`schedule_timezone`**: （可选）任务执行时区，默认为空（使用系统默认时区）。
 
 **如何获取 ID？**
 > 在 Discord 中，您需要先开启“开发者模式”（设置 -> 高级设置）。之后，在您想获取 ID 的频道或用户上右键，即可看到“复制 ID”的选项。
