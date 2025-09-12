@@ -110,4 +110,10 @@ Discounts: 减费
 Game Start: 对局开始时
 End of Turn: 回合结束时
 Spider-Ham: 蜘猪侠
-MARVEL SNAP: 《Marvel Snap》"""
+MARVEL SNAP: 《Marvel Snap》
+Cerebro: 脑波强化机
+Master Mold: 主体模组
+Android: 机器人
+Jim Hammond: 吉姆·哈蒙德(初代霹雳火)
+Cube: 无限魔方
+"""
