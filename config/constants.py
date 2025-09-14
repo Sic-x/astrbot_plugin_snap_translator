@@ -116,4 +116,8 @@ Master Mold: 主体模组
 Android: 机器人
 Jim Hammond: 吉姆·哈蒙德(初代霹雳火)
 Cube: 无限魔方
+First Steps: 初露锋芒
+Evolved: 至高进化
+Galactus: 吞星
+Killmonger: 齐尔蒙格
 """
