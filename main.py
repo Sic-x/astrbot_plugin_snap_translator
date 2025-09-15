@@ -49,8 +49,8 @@ class SnapTranslator(Star):
     def _load_config(self):
         """从插件配置中加载所有设置"""
         try:
-            self.fetch_channel_id = int(self.config.get("fetch_channel_id"))
-            self.summary_channel_id = int(self.config.get("summary_channel_id"))
+            self.fetch_channel_id = self.config.get("fetch_channel_id")
+            self.summary_channel_id = self.config.get("summary_channel_id")
         except (ValueError, TypeError):
             self.fetch_channel_id = None
             self.summary_channel_id = None
@@ -67,7 +67,7 @@ class SnapTranslator(Star):
         self.schedule_timezone = self.config.get("schedule_timezone")
 
         try:
-            self.team_answers_bot_id = int(self.config.get("team_answers_bot_id"))
+            self.team_answers_bot_id = self.config.get("team_answers_bot_id")
         except (ValueError, TypeError):
             self.team_answers_bot_id = None
             logger.warning("team_answers_bot_id 配置格式错误或为空。")
@@ -124,7 +124,7 @@ class SnapTranslator(Star):
 
         # 步骤 3: 推送结果
         logger.info("步骤 3: 发送最终报告...")
-        summary_channel = client.get_channel(self.summary_channel_id)
+        summary_channel = client.get_channel(int(self.summary_channel_id))
         if summary_channel:
             await self._send_chunked_message(
                 summary_channel,
@@ -144,7 +144,7 @@ class SnapTranslator(Star):
         """
         logger.debug("开始在 Discord 中获取消息...")
         try:
-            channel = bot.get_channel(self.fetch_channel_id)
+            channel = bot.get_channel(int(self.fetch_channel_id))
             if not channel:
                 logger.error(f"错误：找不到ID为 {self.fetch_channel_id} 的频道。")
                 return None
@@ -157,7 +157,7 @@ class SnapTranslator(Star):
 
             history_data = []
             async for msg in channel.history(limit=None, after=yesterday_start_utc, before=today_start_utc):
-                if msg.author.id == self.team_answers_bot_id and msg.embeds:
+                if msg.author.id == int(self.team_answers_bot_id) and msg.embeds:
                     message_data = {
                         "message_id": msg.id,
                         "author": {
