@@ -124,4 +124,7 @@ Sera: 塞拉
 MODOK: 默多克
 Legion: 大群
 Cannonball: 加农炮
+Hope Summers: 霍普·萨默斯
+Shuri: 苏睿
+Ramp: 跳费
 """
