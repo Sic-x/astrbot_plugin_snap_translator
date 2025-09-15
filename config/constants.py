@@ -120,4 +120,8 @@ First Steps: 初露锋芒
 Evolved: 至高进化
 Galactus: 吞星
 Killmonger: 齐尔蒙格
+Sera: 塞拉
+MODOK: 默多克
+Legion: 大群
+Cannonball: 加农炮
 """
