@@ -1,13 +1,13 @@
 {
     "fetch_channel_id": {
         "description": "要获取消息的 Discord 频道 ID",
-        "type": "int",
-        "default": 1414437021753016462
+        "type": "string",
+        "default": "1414437021753016462"
     },
     "summary_channel_id": {
         "description": "要发送翻译摘要的 Discord 频道 ID",
-        "type": "int",
-        "default": 1414437021753016462
+        "type": "string",
+        "default": "1414437021753016462"
     },
     "schedule_hour": {
         "description": "每日任务执行的小时 (24小时制)",
@@ -26,7 +26,7 @@
     },
     "team_answers_bot_id": {
         "description": "需要拉取的Discord用户ID",
-        "type": "int",
-        "default": 1414437458854281216
+        "type": "string",
+        "default": "1414437458854281216"
     }
 }
