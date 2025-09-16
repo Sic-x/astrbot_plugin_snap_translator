@@ -133,4 +133,9 @@ Air Walker: 天行者
 Danger: Danger
 Foil: 炫彩
 Jocasta: 乔卡斯塔
+HV: 爆能
+High Voltage: 爆能对决
+Track: 路线
+Overshadow: 抢走风头
+Invisible Woman: 隐形女
 """
