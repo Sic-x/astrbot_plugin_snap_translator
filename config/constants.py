@@ -127,4 +127,10 @@ Cannonball: 加农炮
 Hope Summers: 霍普·萨默斯
 Shuri: 苏睿
 Ramp: 跳费
+Nachos: 玉米片
+Bubs: 老友币
+Air Walker: 天行者
+Danger: Danger
+Foil: 炫彩
+Jocasta: 乔卡斯塔
 """
