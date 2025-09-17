@@ -138,4 +138,9 @@ High Voltage: 爆能对决
 Track: 路线
 Overshadow: 抢走风头
 Invisible Woman: 隐形女
+Infinaut: 时空行者
+Arishem: 阿里瑟姆
+Deadpool’s Diner: 死侍餐厅
+Diner v3: 餐厅v3
+Booster: 强化点数
 """
