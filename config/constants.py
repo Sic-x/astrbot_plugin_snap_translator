@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.3"
+PLUGIN_VERSION = "1.1.4"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
