@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.5"
+PLUGIN_VERSION = "1.1.6"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -130,7 +130,7 @@ Ramp: 跳费
 Nachos: 墨西哥玉米片
 Bubs: 老友币
 Air Walker: 天行者
-Danger: Danger
+Danger: 危境
 Foil: 炫彩
 Jocasta: 乔卡斯塔
 HV: 爆能
