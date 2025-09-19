@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.4"
+PLUGIN_VERSION = "1.1.5"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -127,7 +127,7 @@ Cannonball: 加农炮
 Hope Summers: 霍普·萨默斯
 Shuri: 苏睿
 Ramp: 跳费
-Nachos: 玉米片
+Nachos: 墨西哥玉米片
 Bubs: 老友币
 Air Walker: 天行者
 Danger: Danger
@@ -142,5 +142,8 @@ Infinaut: 时空行者
 Arishem: 阿里瑟姆
 Deadpool’s Diner: 死侍餐厅
 Diner v3: 餐厅v3
-Booster: 强化点数
+Booster: 强化套组
+LTGM: 限时游戏模式
+Agamotto: 阿戈摩托
+Thanos: 灭霸
 """
