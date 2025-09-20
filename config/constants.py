@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.6"
+PLUGIN_VERSION = "1.1.7"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -53,7 +53,7 @@ PROMPT_TEMPLATE = """# 角色
 例如:
 ```json
 {{
-  "translated_text": "标题：[此处是翻译后的标题]\n
+  "translated_text": "开发者答疑[此处填写时间yyyyMMdd]\n————————————————————————————————————————————\n标题：[此处是翻译后的标题]\n
   问：[此处是翻译后的问题]\n\n答：[此处是翻译后的答案]\n————————————————————————————————————————————\n
   标题：[此处是翻译后的标题]\n问：[此处是翻译后的问题]\n\n
   答：[此处是翻译后的答案]"
@@ -146,4 +146,6 @@ Booster: 强化套组
 LTGM: 限时游戏模式
 Agamotto: 阿戈摩托
 Thanos: 灭霸
+Shalla-Bal: 莎拉·巴尔(银河冲浪手·初露锋芒)
+Cull Obsidian: 黑曜霸王
 """
