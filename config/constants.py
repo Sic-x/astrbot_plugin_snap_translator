@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.7"
+PLUGIN_VERSION = "1.1.8"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -148,4 +148,18 @@ Agamotto: 阿戈摩托
 Thanos: 灭霸
 Shalla-Bal: 莎拉·巴尔(银河冲浪手·初露锋芒)
 Cull Obsidian: 黑曜霸王
+Enchantress: 女巫师
+Tribunal: 法庭
+Worldship: 世界之舟
+Hydra Stomper: 九头蛇践踏者
+Polymorph: 变形之术
+Hulkbuster: 反浩克装甲
+Firehair: 焰发
+Mobius M. Mobius: 莫比乌斯·M·莫比乌斯
+Mercury: 水银女
+Esme Cuckoo: 埃斯梅·布谷鸟
+Modifier: 身材调整
+Credits: 点数
+SSM/Symbiote Spider-Man: 共生体蜘蛛侠
+The Raft: 浮桥监狱
 """
