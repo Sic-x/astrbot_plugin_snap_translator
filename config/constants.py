@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.8"
+PLUGIN_VERSION = "1.1.9"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -162,4 +162,5 @@ Modifier: 身材调整
 Credits: 点数
 SSM/Symbiote Spider-Man: 共生体蜘蛛侠
 The Raft: 浮桥监狱
+Nightmare: 梦魇
 """
