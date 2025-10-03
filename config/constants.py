@@ -4,7 +4,7 @@
 PLUGIN_NAME = "astrbot_plugin_snap_translator"
 PLUGIN_AUTHOR = "sic"
 PLUGIN_DESCRIPTION = "自动获取并翻译 Marvel Snap 开发者问答"
-PLUGIN_VERSION = "1.1.11"
+PLUGIN_VERSION = "1.1.12"
 
 # 默认目录和文件名
 DEFAULT_BASE_DIR_NAME = "snap_translator_data"
@@ -114,7 +114,7 @@ MARVEL SNAP: 《Marvel Snap》
 Cerebro: 脑波强化机
 Master Mold: 主体模组
 Android: 机器人
-Jim Hammond: 吉姆·哈蒙德(初代霹雳火)
+Jim Hammond: "霹雳火" 吉姆·哈蒙德
 Cube: 无限魔方
 First Steps: 初露锋芒
 Evolved: 至高进化
@@ -166,4 +166,68 @@ Nightmare: 梦魇
 Sanctum Showdown: 圣所对决
 Kid Omega: 欧米茄小子
 Grand Arena: 大竞技场
+Mystique: 魔形女
+Hulkling: 皇帝 小浩克
+Super Adaptoid: 超级适应体
+Moira X: 莫伊拉X
+Mad Thinker: 狂想家
+Rocket Raccoon: 火箭浣熊
+Groot: 格鲁特
+Clea: 克莉
+Nicholas Scratch: 尼古拉斯·斯克拉奇
+Agony: 极痛
+Vulture: 秃鹫
+Batroc the Leaper: 跳跃者巴托克
+Arana: 蜘蛛女孩
+Mantis: 曼蒂斯
+Sentry: 哨兵
+Martyr: 殉道者
+Hudra Bob: 九头蛇特工鲍勃
+Quick Silver: 快银
+Miek: 米克
+Scorn: 蔑视
+Selene: 黑皇后
+Uncle Ben: 本叔叔
+King Eitri: 矮人王伊特里
+Howard the Duck: 霍华德鸭
+Silver Sable: 银貂
+Black Cat: 黑猫
+Black Knight: 黑骑士
+Titania: 泰坦妮亚
+Uatu the Watcher: 观察者者乌阿图
+Snowguard: 雪守卫
+Bast: 巴斯特
+Echo: 回声
+Nico Minoru: 妮可·米诺鲁
+Sunspot: 太阳黑子
+Blade: 刀锋战士
+Korg: 寇格
+Kitty Pryde: 凯蒂·普莱德
+America Chavez: 阿美莉卡·查维兹
+Loki: 洛基
+Wasp: 黄蜂女
+Squirrel Girl: 松鼠女孩
+Ant·Man: 蚁人
+Yondu: 勇度
+X-23: X-23
+Zabu: 扎布
+Ghost Spider: 幽灵蜘蛛
+Ebony Maw: 黑舌谋士
+Qunjet: 昆式战斗机
+Elektra: 艾丽卡
+Agent 13: 13号特工
+Nightcrawler: 夜行者
+The Hood: 红兜帽
+Nebula: 星云
+Sauron: 翼龙人
+Maria Hill: 玛丽亚·希尔
+Deadpool: 死侍
+M'Baku: 姆巴库
+Yellowjacket: 黄蜂侠
+Zero: 零号
+Hawkeye: 鹰眼
+Kingpin: 金并
+Iron Fist: 铁拳
+Nova: 新星
+Misty Knight: 迷雾骑士
 """
